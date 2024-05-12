@@ -1,7 +1,11 @@
 package main
 
-import "github.com/cmmaran/goorgmgr/internal/server"
+import (
+	"github.com/cmmaran/goorgmgr/internal/layer/business"
+	"github.com/cmmaran/goorgmgr/internal/server"
+)
 
 func main() {
-	server.Start()
+	layer := business.NewBusiness()
+	server.NewServer(layer).Start()
 }
