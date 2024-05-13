@@ -15,6 +15,6 @@ type Employee struct {
 	Name string `json:"name,omitempty"`
 
 	Position string `json:"position,omitempty"`
-	// User Status
+
 	Salary float64 `json:"salary,omitempty"`
 }

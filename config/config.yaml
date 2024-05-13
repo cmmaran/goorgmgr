@@ -1,0 +1,7 @@
+application: 
+  name: Organization Manager
+  description: To manager the organization departments
+  port: 8080
+database:
+  type: in-memory
+  port: 0

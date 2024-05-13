@@ -4,9 +4,10 @@ import (
 	"sync"
 
 	"github.com/cmmaran/goorgmgr/api/model"
+	"github.com/cmmaran/goorgmgr/internal/layer/db"
 )
 
-type EmployeeInterfacer interface {
+type EmployeeInterface interface {
 	CreateEmployee(*model.Employee) *model.Employee
 	GetEmployee() []*model.Employee
 	GetEmployeeByID(id int64) *model.Employee
@@ -15,63 +16,50 @@ type EmployeeInterfacer interface {
 }
 
 type employee struct {
-	mutex   sync.Mutex
-	records []*model.Employee
+	mutex sync.Mutex
+	db    *db.DB
 }
 
 func NewEmployee() *employee {
-	return &employee{}
+	return &employee{
+		db: db.NewDB(),
+	}
 }
 
 func (e *employee) CreateEmployee(emp *model.Employee) *model.Employee {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
-	e.records = append(e.records, emp)
-	return emp
+	rec, _ := e.db.Employee.Create(emp)
+	return rec
 }
 
 func (e *employee) GetEmployee() []*model.Employee {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	return e.records
+	recs, _ := e.db.Employee.List()
+	return recs
 }
 
 func (e *employee) GetEmployeeByID(id int64) *model.Employee {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	for _, rec := range e.records {
-		if rec.Id == id {
-			return rec
-		}
-	}
-
-	return nil
+	rec, _ := e.db.Employee.GetByID(id)
+	return rec
 }
 
 func (e *employee) DeleteEmployee(id int64) []*model.Employee {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
-	for i, rec := range e.records {
-		if rec.Id == id {
-			e.records = append(e.records[:i], e.records[i+1:]...)
-		}
-	}
-
-	return e.records
+	e.db.Employee.Delete(id)
+	return nil
 }
 
 func (e *employee) UpdateEmployee(id int64, emp *model.Employee) *model.Employee {
 	e.mutex.Lock()
 	defer e.mutex.Unlock()
 
-	for i, rec := range e.records {
-		if rec.Id == id {
-			e.records[i] = emp
-			return e.records[i]
-		}
-	}
-
-	return nil
+	rec, _ := e.db.Employee.Update(id, emp)
+	return rec
 }

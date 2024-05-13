@@ -6,10 +6,10 @@ import (
 )
 
 type Business struct {
-	E employee.EmployeeInterfacer
+	E employee.EmployeeInterface
 }
 
-func (b *Business) Employee() employee.EmployeeInterfacer {
+func (b *Business) Employee() employee.EmployeeInterface {
 	return b.E
 }
 

@@ -5,5 +5,5 @@ import (
 )
 
 type Layer interface {
-	Employee() employee.EmployeeInterfacer
+	Employee() employee.EmployeeInterface
 }
